@@ -14,6 +14,9 @@ func WithAddress(addr string) GHypeOptions {
 }
 
 func (w withAddress) Apply(g *internal.GHypeSettings) error {
+	if len(w.address) <= 0 {
+		return ErrInvalidAddress
+	}
 	g.Address = w.address
 	return nil
 }
