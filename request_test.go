@@ -92,6 +92,64 @@ func TestNewRequest(t *testing.T) {
 				gHypeErr: nil,
 			},
 		},
+		{
+			name: "newRequest with OPTION method should return a valid request and err = nil",
+			i: input{
+				from: "OPTION something something",
+			},
+			o: output{
+				r: &Request{
+					Method: OPTION,
+				},
+				gHypeErr: nil,
+			},
+		},
+		{
+			name: "newRequest with TRACE method should return a valid request and err = nil",
+			i: input{
+				from: "TRACE something something",
+			},
+			o: output{
+				r: &Request{
+					Method: TRACE,
+				},
+				gHypeErr: nil,
+			},
+		},
+		{
+			name: "newRequest with CONNECT method should return a valid request and err = nil",
+			i: input{
+				from: "CONNECT something something",
+			},
+			o: output{
+				r: &Request{
+					Method: CONNECT,
+				},
+				gHypeErr: nil,
+			},
+		},
+		{
+			name: "newRequest with ANOTHER (valid) method should return a valid request and err = nil",
+			i: input{
+				from: "JOJO something something",
+			},
+			o: output{
+				r: &Request{
+					Method: ANOTHER,
+				},
+				gHypeErr: nil,
+			},
+		},
+		{
+			name: "newRequest with ANOTHER (invalid) method should return a valid request and err = nil",
+			i: input{
+				from: "JO<JO something something",
+			},
+			o: output{
+				r:        nil,
+				gHypeErr: ErrRequestParse,
+			},
+		},
 	}
 
 	for _, tt := range tests {
