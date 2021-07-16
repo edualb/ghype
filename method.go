@@ -54,31 +54,22 @@ func buildFromMethod(from []byte) (Method, error) {
 	switch {
 	case bytes.Equal(from, []byte("GET")):
 		m = GET
-		break
 	case bytes.Equal(from, []byte("PUT")):
 		m = PUT
-		break
 	case bytes.Equal(from, []byte("DELETE")):
 		m = DELETE
-		break
 	case bytes.Equal(from, []byte("POST")):
 		m = POST
-		break
 	case bytes.Equal(from, []byte("CONNECT")):
 		m = CONNECT
-		break
 	case bytes.Equal(from, []byte("HEAD")):
 		m = HEAD
-		break
 	case bytes.Equal(from, []byte("TRACE")):
 		m = TRACE
-		break
 	case bytes.Equal(from, []byte("OPTION")):
 		m = OPTION
-		break
 	default:
 		m = ANOTHER
-		break
 	}
 
 	if !m.isMethodValid(from) {

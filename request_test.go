@@ -35,7 +35,7 @@ func TestNewRequest(t *testing.T) {
 		{
 			name: "newRequest with GET method should return a valid request and err = nil",
 			i: input{
-				from: "GET something something",
+				from: "GET * something",
 			},
 			o: output{
 				r: &Request{
@@ -47,7 +47,7 @@ func TestNewRequest(t *testing.T) {
 		{
 			name: "newRequest with POST method should return a valid request and err = nil",
 			i: input{
-				from: "POST something something",
+				from: "POST * something",
 			},
 			o: output{
 				r: &Request{
@@ -59,7 +59,7 @@ func TestNewRequest(t *testing.T) {
 		{
 			name: "newRequest with PUT method should return a valid request and err = nil",
 			i: input{
-				from: "PUT something something",
+				from: "PUT * something",
 			},
 			o: output{
 				r: &Request{
@@ -71,7 +71,7 @@ func TestNewRequest(t *testing.T) {
 		{
 			name: "newRequest with DELETE method should return a valid request and err = nil",
 			i: input{
-				from: "DELETE something something",
+				from: "DELETE * something",
 			},
 			o: output{
 				r: &Request{
@@ -83,7 +83,7 @@ func TestNewRequest(t *testing.T) {
 		{
 			name: "newRequest with HEAD method should return a valid request and err = nil",
 			i: input{
-				from: "HEAD something something",
+				from: "HEAD * something",
 			},
 			o: output{
 				r: &Request{
@@ -95,7 +95,7 @@ func TestNewRequest(t *testing.T) {
 		{
 			name: "newRequest with OPTION method should return a valid request and err = nil",
 			i: input{
-				from: "OPTION something something",
+				from: "OPTION * something",
 			},
 			o: output{
 				r: &Request{
@@ -107,7 +107,7 @@ func TestNewRequest(t *testing.T) {
 		{
 			name: "newRequest with TRACE method should return a valid request and err = nil",
 			i: input{
-				from: "TRACE something something",
+				from: "TRACE * something",
 			},
 			o: output{
 				r: &Request{
@@ -119,7 +119,7 @@ func TestNewRequest(t *testing.T) {
 		{
 			name: "newRequest with CONNECT method should return a valid request and err = nil",
 			i: input{
-				from: "CONNECT something something",
+				from: "CONNECT * something",
 			},
 			o: output{
 				r: &Request{
@@ -131,7 +131,7 @@ func TestNewRequest(t *testing.T) {
 		{
 			name: "newRequest with ANOTHER (valid) method should return a valid request and err = nil",
 			i: input{
-				from: "JOJO something something",
+				from: "JOJO * something",
 			},
 			o: output{
 				r: &Request{
@@ -143,7 +143,17 @@ func TestNewRequest(t *testing.T) {
 		{
 			name: "newRequest with ANOTHER (invalid) method should return a valid request and err = nil",
 			i: input{
-				from: "JO<JO something something",
+				from: "JO<JO * something",
+			},
+			o: output{
+				r:        nil,
+				gHypeErr: ErrRequestParse,
+			},
+		},
+		{
+			name: "newRequest with * value in  should return a valid request and err = nil",
+			i: input{
+				from: "JO<JO * something",
 			},
 			o: output{
 				r:        nil,
