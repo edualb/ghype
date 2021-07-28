@@ -7,7 +7,8 @@ import (
 )
 
 type Request struct {
-	Method Method
+	Method     Method
+	RequestURI string
 }
 
 func newRequest(from []byte) (*Request, error) {
