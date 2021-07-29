@@ -11,17 +11,18 @@ func buildFromRequestURI(from []byte) (string, error) {
 		return "*", nil
 	}
 
-	b := bytes.Split(from, []byte(":"))
-	if len(b) != 2 {
-		return "", ErrRequestURIParse
-	}
-	if len(b[0]) <= 0 || len(b[1]) <= 0 {
-		return "", ErrRequestURIParse
-	}
-
-	scheme := b[0]
-	if !isSchemeValid(scheme) {
-		return "", ErrRequestURIParse
+	if bytes.ContainsAny(from, ":") {
+		b := bytes.Split(from, []byte(":"))
+		if len(b) != 2 {
+			return "", ErrRequestURIParse
+		}
+		if len(b[0]) <= 0 || len(b[1]) <= 0 {
+			return "", ErrRequestURIParse
+		}
+		scheme := b[0]
+		if !isSchemeValid(scheme) {
+			return "", ErrRequestURIParse
+		}
 	}
 
 	return string(from), nil
