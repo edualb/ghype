@@ -586,3 +586,127 @@ func TestIsCTLValid(t *testing.T) {
 
 	}
 }
+
+func TestIsByteAlpha(t *testing.T) {
+	type input struct {
+		from byte
+	}
+
+	type output struct {
+		isValid bool
+	}
+
+	type test struct {
+		name string
+		i    input
+		o    output
+	}
+
+	tests := []test{
+		{
+			name: "IsByteAlpha with h value should return isValid = true",
+			i: input{
+				from: []byte{'h'}[0],
+			},
+			o: output{
+				isValid: true,
+			},
+		},
+		{
+			name: "IsByteAlpha with H value should return isValid = true",
+			i: input{
+				from: []byte{'H'}[0],
+			},
+			o: output{
+				isValid: true,
+			},
+		},
+		{
+			name: "IsByteAlpha with * value should return isValid = false",
+			i: input{
+				from: []byte{'*'}[0],
+			},
+			o: output{
+				isValid: false,
+			},
+		},
+		{
+			name: "IsByteAlpha with / value should return isValid = false",
+			i: input{
+				from: []byte{'/'}[0],
+			},
+			o: output{
+				isValid: false,
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		isValid := internal.IsByteAlpha(tt.i.from)
+		if isValid != tt.o.isValid {
+			t.Error(fmt.Sprintf("[%s]: want isValid %v, got %v", tt.name, tt.o.isValid, isValid))
+		}
+	}
+}
+
+func TestIsByteDigit(t *testing.T) {
+	type input struct {
+		from byte
+	}
+
+	type output struct {
+		isValid bool
+	}
+
+	type test struct {
+		name string
+		i    input
+		o    output
+	}
+
+	tests := []test{
+		{
+			name: "IsByteDigit with 0 value should return isValid = true",
+			i: input{
+				from: []byte{'0'}[0],
+			},
+			o: output{
+				isValid: true,
+			},
+		},
+		{
+			name: "IsByteDigit with 9 value should return isValid = true",
+			i: input{
+				from: []byte{'9'}[0],
+			},
+			o: output{
+				isValid: true,
+			},
+		},
+		{
+			name: "IsByteDigit with h value should return isValid = false",
+			i: input{
+				from: []byte{'h'}[0],
+			},
+			o: output{
+				isValid: false,
+			},
+		},
+		{
+			name: "IsByteDigit with : value should return isValid = false",
+			i: input{
+				from: []byte{':'}[0],
+			},
+			o: output{
+				isValid: false,
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		isValid := internal.IsByteDigit(tt.i.from)
+		if isValid != tt.o.isValid {
+			t.Error(fmt.Sprintf("[%s]: want isValid %v, got %v", tt.name, tt.o.isValid, isValid))
+		}
+	}
+}

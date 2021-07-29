@@ -1,6 +1,9 @@
 package internal
 
-import "bytes"
+import (
+	"bytes"
+	"strings"
+)
 
 type Rule rune
 
@@ -86,4 +89,49 @@ func IsCTLValid(from []byte) bool {
 		!bytes.ContainsRune(from, rune(30)) &&
 		!bytes.ContainsRune(from, rune(31)) &&
 		!bytes.ContainsRune(from, rune(127))
+}
+
+func IsByteAlpha(from byte) bool {
+	b := []byte{from}
+	return IsAlpha(b)
+}
+
+func IsAlpha(from []byte) bool {
+	return isAlpha(from, 65)
+}
+
+func isAlpha(from []byte, runeValue int8) bool {
+	if runeValue == 91 {
+		return false
+	}
+
+	r := rune(runeValue)
+	rString := string(r)
+
+	if bytes.ContainsAny(from, rString) || bytes.ContainsAny(from, strings.ToLower(rString)) {
+		return true
+	}
+
+	return false || isAlpha(from, runeValue+1)
+}
+
+func IsByteDigit(from byte) bool {
+	b := []byte{from}
+	return IsDigit(b)
+}
+
+func IsDigit(from []byte) bool {
+	return isDigit(from, 48)
+}
+
+func isDigit(from []byte, runeValue int8) bool {
+	if runeValue == 58 {
+		return false
+	}
+
+	if bytes.ContainsRune(from, rune(runeValue)) {
+		return true
+	}
+
+	return false || isDigit(from, runeValue+1)
 }

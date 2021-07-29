@@ -27,13 +27,11 @@ func buildFromRequestline(from []byte) (*Request, error) {
 	}
 
 	m, err := buildFromMethod(byteSplited[0])
-
 	if err != nil {
 		return nil, ErrRequestParse
 	}
 
 	r := &Request{}
-
 	r.Method = m
 
 	return r, nil
