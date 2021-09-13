@@ -11,18 +11,30 @@ func buildFromRequestURI(from []byte) (string, error) {
 		return "*", nil
 	}
 
-	if bytes.ContainsAny(from, ":") {
-		b := bytes.Split(from, []byte(":"))
-		if len(b) != 2 {
-			return "", ErrRequestURIParse
-		}
-		if len(b[0]) <= 0 || len(b[1]) <= 0 {
-			return "", ErrRequestURIParse
-		}
-		scheme := b[0]
-		if !isSchemeValid(scheme) {
-			return "", ErrRequestURIParse
-		}
+	b := bytes.Split(from, []byte(":"))
+	if len(b) != 2 {
+		return "", ErrRequestURIParse
+	}
+
+	if len(b[0]) <= 0 {
+		return "", ErrRequestURIParse
+	}
+
+	scheme := b[0]
+	if !isSchemeValid(scheme) {
+		return "", ErrRequestURIParse
+	}
+
+	hierPartOrOpaquePart := b[1]
+
+	// hier_part with net_path see: https://datatracker.ietf.org/doc/html/rfc2396#section-3
+	if bytes.ContainsAny(hierPartOrOpaquePart, "//") {
+
+	}
+
+	// hier_part with abs_path see: https://datatracker.ietf.org/doc/html/rfc2396#section-3
+	if bytes.ContainsAny(hierPartOrOpaquePart, "/") {
+
 	}
 
 	return string(from), nil

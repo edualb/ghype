@@ -48,8 +48,8 @@ func TestBuildFromRequestURI(t *testing.T) {
 				from: "something:",
 			},
 			o: output{
-				rURI:     "",
-				gHypeErr: ErrRequestURIParse,
+				rURI:     "something:",
+				gHypeErr: nil,
 			},
 		},
 		{
