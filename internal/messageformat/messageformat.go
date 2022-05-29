@@ -1,47 +1,76 @@
 package messageformat
 
-import "github.com/edualb/ghype/internal/version"
+import (
+	"errors"
+	"strings"
 
-func GetHTTPMessage() string {
-	return ""
+	"github.com/edualb/ghype/internal/methods"
+	"github.com/edualb/ghype/internal/version"
+)
+
+const (
+	cr   = string(rune(13))
+	lf   = string(rune(10))
+	CRLF = cr + lf
+)
+
+var (
+	ErrMethodNotAllowed = methods.ErrMethodNotAllowed
+	ErrInvalidMessage   = errors.New("invalid HTTP message to process")
+)
+
+func GetHTTPMessage(message string) (HTTPMessage, error) {
+	httpMsg := &HTTPMessage{}
+	startLine := &StartLine{}
+
+	requestLine, err := getRequestLine(message)
+	if err != nil {
+		return *httpMsg, err
+	}
+	startLine.RequestLine = requestLine
+
+	httpMsg.Startline = *startLine
+	return *httpMsg, err
 }
 
 type HTTPMessage struct {
-	startline startLine
+	Startline StartLine
 }
 
 // requestLine will get requestLine or statusLine
-type startLine struct {
-	requestLine requestLine
-	statusLine  statusLine
+type StartLine struct {
+	RequestLine RequestLine
 }
 
-func (sl startLine) Get() line {
-	if sl.requestLine.status {
-		return sl.requestLine
+type RequestLine struct {
+	Method        string // token https://datatracker.ietf.org/doc/html/rfc7230#section-3.2.6
+	RequestTarget string //https://datatracker.ietf.org/doc/html/rfc7230#section-5.3
+	HTTPVersion   string
+	Status        bool
+}
+
+func getRequestLine(message string) (RequestLine, error) {
+	r := &RequestLine{}
+
+	lines := strings.Split(message, " ")
+	if len(lines) != 3 {
+		return *r, ErrInvalidMessage
 	}
-	return sl.statusLine
-}
 
-type line interface {
-	Get() string
-}
+	ok := methods.IsValid(lines[0])
+	if !ok {
+		return *r, ErrMethodNotAllowed // A server that receives a method longer than any that it implements SHOULD respond with a 501 (Not Implemented) status code.
+	}
+	r.Method = lines[0]
 
-type requestLine struct {
-	method        string // token https://datatracker.ietf.org/doc/html/rfc7230#section-3.2.6
-	requestTarget string //https://datatracker.ietf.org/doc/html/rfc7230#section-5.3
-	httpVersion   string
-	status        bool
-}
+	ok = version.IsValid(lines[2])
+	if !ok {
+		return *r, errors.New("wrong HTTP version, this protocol just accept " + version.HTTP())
+	}
+	r.HTTPVersion = lines[2]
 
-func (l requestLine) Get() string {
-	return " " + " " + version.HTTPVersion() + ""
-}
+	r.Status = true
+	r.RequestTarget = "" // request-target longer than any URI it wishes to parse MUST respond with a 414 (URI Too Long) status code
 
-type statusLine struct {
-	status bool
-}
-
-func (l statusLine) Get() string {
-	return ""
+	return *r, nil
 }
