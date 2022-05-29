@@ -7,6 +7,10 @@ const (
 	minor = 1
 )
 
-func HTTPVersion() string {
+func HTTP() string {
 	return "HTTP/" + strconv.Itoa(major) + "." + strconv.Itoa(minor)
+}
+
+func IsValid(httpVersion string) bool {
+	return httpVersion == HTTP()
 }

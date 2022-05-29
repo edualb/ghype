@@ -18,7 +18,7 @@ func TestHTTPVersion(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		got := version.HTTPVersion()
+		got := version.HTTP()
 		if got != tt.exp {
 			t.Errorf("unexpected http version, got %s wants %s", got, tt.exp)
 		}
